@@ -13,9 +13,9 @@ TypeOK ==
     /\ Occupation5 \in { TRUE, FALSE }
 
 Init == 
-    /\ Occupation1 = TRUE
+    /\ Occupation1 = FALSE
     /\ Occupation2 = FALSE
-    /\ Occupation3 = TRUE
+    /\ Occupation3 = FALSE
     /\ Occupation4 = FALSE
     /\ Occupation5 = FALSE
 
@@ -64,11 +64,24 @@ MoveCar5 ==
     /\ Occupation5' = FALSE
     /\ Occupation1' = TRUE
 
+Idle ==
+    /\ Occupation1 = FALSE
+    /\ Occupation2 = FALSE
+    /\ Occupation3 = FALSE
+    /\ Occupation4 = FALSE
+    /\ Occupation5 = FALSE
+    /\ Occupation1' = FALSE
+    /\ Occupation2' = FALSE
+    /\ Occupation3' = FALSE
+    /\ Occupation4' = FALSE
+    /\ Occupation5' = FALSE
+
 Next == 
     \/ MoveCar1
     \/ MoveCar2
     \/ MoveCar3
     \/ MoveCar4
     \/ MoveCar5
+    \/ Idle
 
 ====
