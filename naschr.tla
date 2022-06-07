@@ -19,7 +19,7 @@ BoolToInt(b) == IF b THEN 1 ELSE 0
     
 NumObjects(oc) == BoolToInt(oc[1]) + BoolToInt(oc[2]) + BoolToInt(oc[3]) + BoolToInt(oc[4]) + BoolToInt(oc[5])
     
-Crash == NumObjects(Occupation') /= NumEntered' - NumExited'
+Crash == NumObjects(Occupation) /= NumEntered - NumExited
 
 NoCrashEver == [][Crash = FALSE]_<<Occupation, NumEntered, NumExited>>
 
@@ -30,18 +30,6 @@ MoveCar(n) ==
      /\ NumEntered' = NumEntered
      /\ NumExited' = NumExited
 
-MoveCar1 == 
-    /\ MoveCar(1)
-
-MoveCar2 ==
-    /\ MoveCar(2)
-
-MoveCar3 == 
-    /\ MoveCar(3)
-
-MoveCar4 == 
-    /\ MoveCar(4)
-    
 EnterCar == 
     /\ NumEntered < 10
     /\ Occupation[1] = FALSE
@@ -62,10 +50,10 @@ Idle ==
     /\ NumExited' = NumExited
 
 Next == 
-    \/ MoveCar1
-    \/ MoveCar2
-    \/ MoveCar3
-    \/ MoveCar4
+    \/ MoveCar(1)
+    \/ MoveCar(2)
+    \/ MoveCar(3)
+    \/ MoveCar(4)
     \/ ExitCar
     \/ EnterCar
     \/ Idle
