@@ -4,3 +4,4 @@
 *.dvi
 *.out
 /naschr.toolbox/*
+/*.toolbox/*
