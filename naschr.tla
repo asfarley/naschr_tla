@@ -23,33 +23,24 @@ Crash == NumObjects(Occupation') /= NumEntered' - NumExited'
 
 NoCrashEver == [][Crash = FALSE]_<<Occupation, NumEntered, NumExited>>
 
+MoveCar(n) ==
+     /\ Occupation[n] = TRUE
+     /\ Occupation[n+1] = FALSE
+     /\ Occupation' = [Occupation EXCEPT ![n] = FALSE, ![n+1] = TRUE]
+     /\ NumEntered' = NumEntered
+     /\ NumExited' = NumExited
+
 MoveCar1 == 
-    /\ Occupation[1] = TRUE
-    /\ Occupation[2] = FALSE
-    /\ Occupation' = [Occupation EXCEPT ![1] = FALSE, ![2] = TRUE]
-    /\ NumEntered' = NumEntered
-    /\ NumExited' = NumExited
+    /\ MoveCar(1)
 
 MoveCar2 ==
-    /\ Occupation[2] = TRUE
-    /\ Occupation[3] = FALSE 
-    /\ Occupation' = [Occupation EXCEPT ![2] = FALSE, ![3] = TRUE]
-    /\ NumEntered' = NumEntered
-    /\ NumExited' = NumExited
+    /\ MoveCar(2)
 
 MoveCar3 == 
-    /\ Occupation[3] = TRUE
-    /\ Occupation[4] = FALSE
-    /\ Occupation' = [Occupation EXCEPT ![3] = FALSE, ![4] = TRUE]
-    /\ NumEntered' = NumEntered
-    /\ NumExited' = NumExited
+    /\ MoveCar(3)
 
 MoveCar4 == 
-    /\ Occupation[4] = TRUE
-    /\ Occupation[5] = FALSE
-    /\ Occupation' = [Occupation EXCEPT ![4] = FALSE, ![5] = TRUE]
-    /\ NumEntered' = NumEntered
-    /\ NumExited' = NumExited
+    /\ MoveCar(4)
     
 EnterCar == 
     /\ NumEntered < 10
