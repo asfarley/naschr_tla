@@ -1,87 +1,83 @@
 ---- MODULE naschr ----
-VARIABLE Occupation1
-VARIABLE Occupation2
-VARIABLE Occupation3
-VARIABLE Occupation4
-VARIABLE Occupation5
+EXTENDS Naturals
+
+VARIABLE Occupation
+VARIABLE NumEntered
+VARIABLE NumExited
 
 TypeOK == 
-    /\ Occupation1 \in { TRUE, FALSE }
-    /\ Occupation2 \in { TRUE, FALSE }
-    /\ Occupation3 \in { TRUE, FALSE }
-    /\ Occupation4 \in { TRUE, FALSE }
-    /\ Occupation5 \in { TRUE, FALSE }
+    /\ Occupation \in [ { 1, 2, 3, 4, 5 } -> BOOLEAN ]
+    /\ NumEntered \in 0..10
+    /\ NumExited \in 0..50
 
 Init == 
-    /\ Occupation1 = FALSE
-    /\ Occupation2 = FALSE
-    /\ Occupation3 = FALSE
-    /\ Occupation4 = FALSE
-    /\ Occupation5 = FALSE
+    /\ Occupation = <<TRUE, FALSE, FALSE, FALSE, FALSE>>
+    /\ NumEntered = 1
+    /\ NumExited = 0
+    
+BoolToInt(b) == IF b THEN 1 ELSE 0
+    
+NumObjects(oc) == BoolToInt(oc[1]) + BoolToInt(oc[2]) + BoolToInt(oc[3]) + BoolToInt(oc[4]) + BoolToInt(oc[5])
+    
+Crash == NumObjects(Occupation') /= NumEntered' - NumExited'
+
+NoCrashEver == [][Crash = FALSE]_<<Occupation, NumEntered, NumExited>>
 
 MoveCar1 == 
-    /\ Occupation1 = TRUE
-    /\ Occupation2 = FALSE
-    /\ Occupation1' = FALSE
-    /\ Occupation2' = TRUE
-    /\ Occupation3' = Occupation3
-    /\ Occupation4' = Occupation4
-    /\ Occupation5' = Occupation5
+    /\ Occupation[1] = TRUE
+    /\ Occupation[2] = FALSE
+    /\ Occupation' = [Occupation EXCEPT ![1] = FALSE, ![2] = TRUE]
+    /\ NumEntered' = NumEntered
+    /\ NumExited' = NumExited
 
-MoveCar2 == 
-    /\ Occupation1' = Occupation1
-    /\ Occupation2 = TRUE
-    /\ Occupation3 = FALSE
-    /\ Occupation2' = FALSE
-    /\ Occupation3' = TRUE
-    /\ Occupation4' = Occupation4
-    /\ Occupation5' = Occupation5
+MoveCar2 ==
+    /\ Occupation[2] = TRUE
+    /\ Occupation[3] = FALSE 
+    /\ Occupation' = [Occupation EXCEPT ![2] = FALSE, ![3] = TRUE]
+    /\ NumEntered' = NumEntered
+    /\ NumExited' = NumExited
 
 MoveCar3 == 
-    /\ Occupation1' = Occupation1
-    /\ Occupation2' = Occupation2
-    /\ Occupation3 = TRUE
-    /\ Occupation4 = FALSE
-    /\ Occupation3' = FALSE
-    /\ Occupation4' = TRUE
-    /\ Occupation5' = Occupation5
+    /\ Occupation[3] = TRUE
+    /\ Occupation[4] = FALSE
+    /\ Occupation' = [Occupation EXCEPT ![3] = FALSE, ![4] = TRUE]
+    /\ NumEntered' = NumEntered
+    /\ NumExited' = NumExited
 
 MoveCar4 == 
-    /\ Occupation1' = Occupation1
-    /\ Occupation2' = Occupation2
-    /\ Occupation3' = Occupation3
-    /\ Occupation4 = TRUE
-    /\ Occupation5 = FALSE
-    /\ Occupation4' = FALSE
-    /\ Occupation5' = TRUE
-
-MoveCar5 == 
-    /\ Occupation2' = Occupation2
-    /\ Occupation3' = Occupation3
-    /\ Occupation4' = Occupation4
-    /\ Occupation5 = TRUE
-    /\ Occupation1 = FALSE
-    /\ Occupation5' = FALSE
-    /\ Occupation1' = TRUE
+    /\ Occupation[4] = TRUE
+    /\ Occupation[5] = FALSE
+    /\ Occupation' = [Occupation EXCEPT ![4] = FALSE, ![5] = TRUE]
+    /\ NumEntered' = NumEntered
+    /\ NumExited' = NumExited
+    
+EnterCar == 
+    /\ NumEntered < 10
+    /\ Occupation[1] = FALSE
+    /\ Occupation' = [Occupation EXCEPT ![1] = TRUE]
+    /\ NumEntered' = NumEntered + 1
+    /\ NumExited' = NumExited
+    
+ExitCar == 
+    /\ Occupation[5] = TRUE
+    /\ Occupation' = [Occupation EXCEPT ![5] = FALSE]
+    /\ NumEntered' = NumEntered
+    /\ NumExited' = NumExited + 1
 
 Idle ==
-    /\ Occupation1 = FALSE
-    /\ Occupation2 = FALSE
-    /\ Occupation3 = FALSE
-    /\ Occupation4 = FALSE
-    /\ Occupation5 = FALSE
-    /\ Occupation1' = FALSE
-    /\ Occupation2' = FALSE
-    /\ Occupation3' = FALSE
-    /\ Occupation4' = FALSE
-    /\ Occupation5' = FALSE
+    /\ \A i \in 1..5: Occupation[i] = FALSE
+    /\ Occupation' = Occupation
+    /\ NumEntered' = NumEntered
+    /\ NumExited' = NumExited
 
 Next == 
     \/ MoveCar1
     \/ MoveCar2
     \/ MoveCar3
     \/ MoveCar4
-    \/ MoveCar5
+    \/ ExitCar
+    \/ EnterCar
     \/ Idle
+    
 
 ====
